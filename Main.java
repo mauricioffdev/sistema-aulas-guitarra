@@ -2,6 +2,8 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
+import java.time.format.DateTimeFormatter;
+
 
 public class Main {
     private static List<Aluno> alunos = new ArrayList<>();
@@ -68,16 +70,19 @@ public class Main {
         int index = lerIndiceAluno();
 
         // Validar data
-        LocalDate data = null;
-        while (data == null) {
-            try {
-                System.out.print("Data da aula (AAAA-MM-DD): ");
-                String input = scanner.nextLine();
-                data = LocalDate.parse(input);
-            } catch (Exception e) {
-                System.out.println("Formato inválido. Use: 2025-07-12");
-            }
-        }
+       DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+
+LocalDate data = null;
+while (data == null) {
+    try {
+        System.out.print("Data da aula (DD/MM/AAAA): ");
+        String input = scanner.nextLine();
+        data = LocalDate.parse(input, formatoBrasileiro);
+    } catch (Exception e) {
+        System.out.println("Formato inválido. Use: 12/07/2025");
+    }
+}
+
 
         // Validar duração
         int duracao = -1;

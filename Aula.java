@@ -1,4 +1,5 @@
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 
 public class Aula {
     private LocalDate data;
@@ -24,7 +25,10 @@ public class Aula {
     }
 
     @Override
-    public String toString() {
-        return "Data: " + data + " | Duração: " + duracaoMinutos + " min | Obs: " + observacoes;
-    }
+public String toString() {
+    DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    return "Data: " + data.format(formato) +
+           " | Duração: " + duracaoMinutos + " min | Obs: " + observacoes;
+}
+
 }
