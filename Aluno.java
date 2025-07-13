@@ -16,6 +16,16 @@ public class Aluno {
         this.historicoAulas = new ArrayList<>();
     }
 
+    private List<Pagamento> pagamentos = new ArrayList<>();
+
+public void adicionarPagamento(Pagamento pagamento) {
+    pagamentos.add(pagamento);
+}
+
+public List<Pagamento> getPagamentos() {
+    return pagamentos;
+}
+
     public void adicionarAula(Aula aula) {
         historicoAulas.add(aula);
     }

@@ -4,7 +4,6 @@ import java.util.List;
 import java.util.Scanner;
 import java.time.format.DateTimeFormatter;
 
-
 public class Main {
     private static List<Aluno> alunos = new ArrayList<>();
     private static Scanner scanner = new Scanner(System.in);
@@ -17,7 +16,8 @@ public class Main {
                 System.out.println("1. Cadastrar novo aluno");
                 System.out.println("2. Listar alunos");
                 System.out.println("3. Registrar aula para aluno");
-                System.out.println("4. Ver histórico de aulas de um aluno");
+                System.out.println("4. Registrar pagamento");
+                System.out.println("5. Ver histórico de pagamentos de um aluno");
                 System.out.println("0. Sair");
                 System.out.print("Escolha uma opção: ");
                 opcao = Integer.parseInt(scanner.nextLine());
@@ -26,7 +26,8 @@ public class Main {
                     case 1 -> cadastrarAluno();
                     case 2 -> listarAlunos();
                     case 3 -> registrarAula();
-                    case 4 -> verHistorico();
+                    case 4 -> registrarPagamento();
+                    case 5 -> verHistoricoPagamentos();
                     case 0 -> System.out.println("Encerrando o sistema.");
                     default -> System.out.println("Opção inválida.");
                 }
@@ -69,22 +70,18 @@ public class Main {
         listarAlunos();
         int index = lerIndiceAluno();
 
-        // Validar data
-       DateTimeFormatter formatoBrasileiro = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate data = null;
+        while (data == null) {
+            try {
+                System.out.print("Data da aula (dd/MM/yyyy): ");
+                String input = scanner.nextLine();
+                data = LocalDate.parse(input, formato);
+            } catch (Exception e) {
+                System.out.println("Formato inválido. Use: 12/07/2025");
+            }
+        }
 
-LocalDate data = null;
-while (data == null) {
-    try {
-        System.out.print("Data da aula (DD/MM/AAAA): ");
-        String input = scanner.nextLine();
-        data = LocalDate.parse(input, formatoBrasileiro);
-    } catch (Exception e) {
-        System.out.println("Formato inválido. Use: 12/07/2025");
-    }
-}
-
-
-        // Validar duração
         int duracao = -1;
         while (duracao < 0) {
             try {
@@ -103,7 +100,7 @@ while (data == null) {
         System.out.println("Aula registrada com sucesso!");
     }
 
-    private static void verHistorico() {
+    private static void registrarPagamento() {
         if (alunos.isEmpty()) {
             System.out.println("Nenhum aluno cadastrado.");
             return;
@@ -111,14 +108,54 @@ while (data == null) {
 
         listarAlunos();
         int index = lerIndiceAluno();
+        Aluno aluno = alunos.get(index);
 
-        List<Aula> aulas = alunos.get(index).getHistoricoAulas();
-        if (aulas.isEmpty()) {
-            System.out.println("Nenhuma aula registrada para este aluno.");
+        DateTimeFormatter formato = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+        LocalDate data = null;
+        while (data == null) {
+            try {
+                System.out.print("Data do pagamento (dd/MM/yyyy): ");
+                data = LocalDate.parse(scanner.nextLine(), formato);
+            } catch (Exception e) {
+                System.out.println("Formato inválido. Use: 12/07/2025");
+            }
+        }
+
+        double valor = -1;
+        while (valor < 0) {
+            try {
+                System.out.print("Valor pago: ");
+                valor = Double.parseDouble(scanner.nextLine());
+            } catch (Exception e) {
+                System.out.println("Digite um valor válido. Ex: 100.00");
+            }
+        }
+
+        String metodo = lerTexto("Método de pagamento (Pix, Dinheiro, etc)");
+        String status = lerTexto("Status (Pago ou Pendente)");
+
+        Pagamento pagamento = new Pagamento(data, valor, metodo, status);
+        aluno.adicionarPagamento(pagamento);
+        System.out.println("Pagamento registrado com sucesso!");
+    }
+
+    private static void verHistoricoPagamentos() {
+        if (alunos.isEmpty()) {
+            System.out.println("Nenhum aluno cadastrado.");
+            return;
+        }
+
+        listarAlunos();
+        int index = lerIndiceAluno();
+        Aluno aluno = alunos.get(index);
+
+        List<Pagamento> pagamentos = aluno.getPagamentos();
+        if (pagamentos.isEmpty()) {
+            System.out.println("Nenhum pagamento registrado para este aluno.");
         } else {
-            System.out.println("\n--- Histórico de Aulas ---");
-            for (Aula aula : aulas) {
-                System.out.println(aula);
+            System.out.println("\n--- Histórico de Pagamentos ---");
+            for (Pagamento p : pagamentos) {
+                System.out.println(p);
             }
         }
     }
