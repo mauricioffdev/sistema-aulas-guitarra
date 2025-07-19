@@ -13,6 +13,6 @@ Sistema em Java para gerenciamento de alunos, aulas e pagamentos. Desenvolvido i
 
 ## Como executar
 
-```bash
-javac Aluno.java Aula.java Pagamento.java Main.java
+javac *.java
 java Main
+
