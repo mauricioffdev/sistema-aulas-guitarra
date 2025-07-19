@@ -14,5 +14,6 @@ Sistema em Java para gerenciamento de alunos, aulas e pagamentos. Desenvolvido i
 ## Como executar
 
 javac *.java
+
 java Main
 
